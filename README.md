@@ -12,9 +12,12 @@ sia in file html che in file tex
 
 - analisi regressiva
 
-tot modello completo 
-casa
+tot -> modello completo 
+
 anagrafico
+
+casa
+
 esperienza 
 
 in files html
