@@ -10,7 +10,7 @@ library(corrplot)
 library(Hmisc)
 library(xtable)
 #library(JWileymisc)
-library(sjt)
+library(sjPlot)
 
 #########################################################################################################
 # x is a matrix containing the data
@@ -72,10 +72,12 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 #########################################################################################################
 
 mat_zab=readRDS("mat_zab.rds")
+mat_zab$Q44bis=ifelse(mat_zab$Q44>1,0,mat_zab$Q44)
 NA_risk_obj=which(is.na(mat_zab$RISCHIO.OGGETTIVO))
 nozero_NA_Q11=which(mat_zab$Q11>0)
 
 esp_mat_zab=mat_zab[nozero_NA_Q11,c(2:10,12:length(names(mat_zab)))]
+esp_mat_zab$Q44=NULL
 noesp_mat_zab=mat_zab[,2:11]
 
 ###########################################################################################################àààà
@@ -114,7 +116,7 @@ sjt.glm(casa,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="casa_noes
 capture.output(xtable(casa), file = "casa_model_noexp.tex")
 
 
-esperienza=glm(SCORE_VG~Q44+Q13N+Q14A+Q15N,data=esp_mat_zab)
+esperienza=glm(SCORE_VG~Q44bis+Q13N+Q14A+Q15N,data=esp_mat_zab)
 summary(esperienza)
 sjt.glm(esperienza,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="esperienza_noesp.html")
 capture.output(xtable(esperienza), file = "esperienza_model_noexp.tex")
