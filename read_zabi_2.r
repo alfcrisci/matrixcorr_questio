@@ -1,5 +1,3 @@
-# install.packages("corrplot")
-# install.packages("JWileymisc")
 
 setwd("/home/alf/alf_github/matrixcorr_questio")
 
@@ -8,7 +6,6 @@ library(MASS)
 library(corrplot)
 library(Hmisc)
 library(xtable)
-#library(JWileymisc)
 library(sjPlot)
 
 #########################################################################################################
@@ -63,62 +60,34 @@ corstars <-function(x, method=c("pearson", "spearman"), removeTriangle=c("upper"
 } 
 #########################################################################################################
 
-#wb = loadWorkbook("mat_zab.xlsx")
-#df = readWorksheet(wb, sheet = "Foglio1")
-#mat_zab$Score_VG_TXT=NULL
-#mat_zab$ID=NULL
-#saveRDS(mat_zab,"mat_zab.rds")
+wb = loadWorkbook("mat_zab_new.xlsx")
+df = readWorksheet(wb, sheet = "Foglio1")
+df$ID=NULL
+saveRDS(df,"mat_zab2.rds")
 #########################################################################################################
 
-mat_zab=readRDS("mat_zab.rds")
-mat_zab$Q44bis=ifelse(mat_zab$Q44>1,0,mat_zab$Q44)
-NA_risk_obj=which(is.na(mat_zab$RISCHIO.OGGETTIVO))
-nozero_NA_Q11=which(mat_zab$Q11>0)
+mat_zab2=readRDS("mat_zab2.rds")
 
-esp_mat_zab=mat_zab[nozero_NA_Q11,c(2:10,12:length(names(mat_zab)))]
-esp_mat_zab$Q44=NULL
-noesp_mat_zab=mat_zab[,2:11]
+last_mat_zab=mat_zab2
 
 ###########################################################################################################àààà
 
-corstars(noesp_mat_zab,"spearman","upper","none")
-corstars(noesp_mat_zab,"pearson","upper","none")
-capture.output(corstars(noesp_mat_zab,"spearman","upper","latex"), file = "matcorr_noesp.tex")
-capture.output(corstars(noesp_mat_zab,"spearman","upper","html"), file = "matcorr_noesp.html")
+corstars(mat_zab2,"spearman","upper","none")
+corstars(last_mat_zab,"pearson","upper","none")
+capture.output(corstars(last_mat_zab,"spearman","upper","latex"), file = "matcorr_last_spear.tex")
+capture.output(corstars(last_mat_zab,"spearman","upper","html"), file = "matcorr_last_spear.html")
 
 
-corstars(esp_mat_zab,"spearman","upper","none")
-corstars(esp_mat_zab,"pearson","upper","none")
-capture.output(corstars(esp_mat_zab,"spearman","upper","latex"), file = "matcorr_esp.tex")
-capture.output(corstars(esp_mat_zab,"spearman","upper","html"), file = "matcorr_esp.html")
 
 ###########################################################################################################àààà
 
 # modello totale
 
-tot=glm(SCORE_VG~.,data=noesp_mat_zab)
+tot=glm(SCORE_VG~.,data=last_mat_zab)
 summary(tot)
-sjt.glm(tot,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="tot_noesp.html")
-capture.output(xtable(tot), file = "tot_model_noexp.tex")
+sjt.glm(tot,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="tot_last.html")
+capture.output(xtable(tot), file = "tot_last.tex")
 
-# modello anagrafico
- 
-anagrafico=glm(SCORE_VG~Q1+Q2+Q3,data=noesp_mat_zab)
-summary(anagrafico)
-sjt.glm(anagrafico,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="anagrafico_noesp.html")
-capture.output(xtable(anagrafico), file = "anagrafico_model_noexp.tex")
-
-
-casa=glm(SCORE_VG~Q6+Q7+Q8N+Q9N+Q10,data=noesp_mat_zab)
-summary(casa)
-sjt.glm(casa,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="casa_noesp.html")
-capture.output(xtable(casa), file = "casa_model_noexp.tex")
-
-
-esperienza=glm(SCORE_VG~Q44bis+Q13N+Q14A+Q15N,data=esp_mat_zab)
-summary(esperienza)
-sjt.glm(esperienza,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="esperienza_noesp.html")
-capture.output(xtable(esperienza), file = "esperienza_model_noexp.tex")
 
 ######################################################################################################
 # [1] http://www.sthda.com/english/wiki/elegant-correlation-table-using-xtable-r-package
