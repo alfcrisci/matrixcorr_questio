@@ -1,3 +1,6 @@
+# to install sjPlot
+# install.packages("devtools")
+# devtools::install_github("strengejacke/strengejacke")
 
 setwd("/home/alf/alf_github/matrixcorr_questio")
 
@@ -87,6 +90,20 @@ tot=glm(SCORE_VG~.,data=last_mat_zab)
 summary(tot)
 sjt.glm(tot,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="tot_last.html")
 capture.output(xtable(tot), file = "tot_last.tex")
+
+
+mod1_zab=tot=glm(Q31~Q29+SCORE_VG+Q33.N+Q41N,data=last_mat_zab)
+summary(mod1_zab)
+sjt.glm(mod1_zab,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="mod1_zab.html")
+capture.output(xtable(mod1_zab), file = "mod1_zab.tex")
+
+mod2_zab=tot=glm(Q32~Q29+SCORE_VG+Q33.N+Q41N,data=last_mat_zab)
+summary(mod2_zab)
+sjt.glm(mod2_zab,show.aic = TRUE, show.family = TRUE, show.r2 = TRUE,file="mod2_zab.html")
+capture.output(xtable(mod2_zab), file = "mod2_zab.tex")
+
+
+
 
 
 ######################################################################################################
